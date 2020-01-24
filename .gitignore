@@ -1,0 +1,16 @@
+# Ignore RStudio hidden folders
+.Rproj.user
+
+# Ignore vscode files
+.vscode
+
+# Ignore all hidden files in data folder
+data/*
+
+# Ignore RStudio hidden files
+.Rhistory
+.RData
+.Ruserdata
+
+# Ignore Mac OS .DS_Store
+.DS_Store
