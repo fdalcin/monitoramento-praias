@@ -273,5 +273,5 @@ df_training <- select(df_training, model_columns)
 df_testing <- filter(df, quantidade_interacoes == 'none')
 df_testing <- select(df_testing, model_columns)
 
-create_report(df_training, output_file = 'training_report.html')
-create_report(df_testing, output_file = 'testing_report.html')
+# create_report(df_training, output_file = 'training_report.html')
+# create_report(df_testing, output_file = 'testing_report.html')
