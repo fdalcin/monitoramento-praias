@@ -264,12 +264,14 @@ df$diagnostico_presuntivo_lesao_principal_causa <- ifelse(df$diagnostico_presunt
 df$diagnostico_primario_lesao_principal_orgao <- ifelse(df$diagnostico_primario_lesao_principal_orgao == '', 'indeterminado', df$diagnostico_primario_lesao_principal_orgao)
 df$diagnostico_primario_lesao_principal_orgao <- ifelse(df$diagnostico_primario_lesao_principal_orgao == '', 'indeterminado', df$diagnostico_primario_lesao_principal_orgao)
 
+df[model_columns] = lapply(df[model_columns], as.factor)
+
 # Criando bases de treino e teste
 df_training <- filter(df, quantidade_interacoes == 'one')
 df_training <- select(df_training, model_columns)
 
-df_test <- filter(df, quantidade_interacoes == 'none')
-df_test <- select(df_test, model_columns)
+df_testing <- filter(df, quantidade_interacoes == 'none')
+df_testing <- select(df_testing, model_columns)
 
-# create_report(df_training)
-# create_report(df_test)
+create_report(df_training, output_file = 'training_report.html')
+create_report(df_testing, output_file = 'testing_report.html')
