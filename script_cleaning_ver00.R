@@ -47,8 +47,6 @@ model_columns = c(
 # Removendo colunas desnecessárias do dataframe
 df <- select(df, -unnecessary_columns)
 
-# rm(unnecessary_columns)
-
 stopWords <- stopwords('pt-BR')
 regexStatus <- 'status: ([^,]*)(.*)'
 regexMotivo <- ', (motivo: (.*)|(.*))'
@@ -56,7 +54,7 @@ regexTipo <- 'tipo: ([^,]*)(.*)'
 regexNivel <- ', nivel: (.*)|(.*)'
 regexPontuacao <- '[[:punct:]]'
 regexEspacosExtras <- '\\s+'
-enconding <- 'Latin-ASCII'
+encoding <- 'Latin-ASCII'
 
 # Adicionando coluna indicativa do número de interacoes_antropicas
 df$quantidade_interacoes <- ifelse(grepl(';', df$interacoes_antropicas), 'multiple',
@@ -65,61 +63,61 @@ df$quantidade_interacoes <- ifelse(grepl(';', df$interacoes_antropicas), 'multip
 df <- filter(df, quantidade_interacoes != 'multiple')
 
 # Transformar valores das principais colunas para lowercase e remover acentos
-df <- df %>% mutate(instituicao_executora = stri_trans_general(tolower(instituicao_executora), enconding))
-df <- df %>% mutate(necropsia_imediata = stri_trans_general(tolower(necropsia_imediata), enconding))
-df <- df %>% mutate(escore_corporal = stri_trans_general(tolower(escore_corporal), enconding))
-df <- df %>% mutate(presenca_de_residuos_solidos = stri_trans_general(tolower(presenca_de_residuos_solidos), enconding))
-df <- df %>% mutate(interacoes_antropicas = stri_trans_general(tolower(interacoes_antropicas), enconding))
+df <- df %>% mutate(instituicao_executora = stri_trans_general(tolower(instituicao_executora), encoding))
+df <- df %>% mutate(necropsia_imediata = stri_trans_general(tolower(necropsia_imediata), encoding))
+df <- df %>% mutate(escore_corporal = stri_trans_general(tolower(escore_corporal), encoding))
+df <- df %>% mutate(presenca_de_residuos_solidos = stri_trans_general(tolower(presenca_de_residuos_solidos), encoding))
+df <- df %>% mutate(interacoes_antropicas = stri_trans_general(tolower(interacoes_antropicas), encoding))
 
 # diagnostico_contributivo
-df <- df %>% mutate(diagnostico_presuntivo_causa = stri_trans_general(tolower(diagnostico_presuntivo_causa), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_presuntivo_lesao_principal_orgao), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesao_principal_causa = stri_trans_general(tolower(diagnostico_presuntivo_lesao_principal_causa), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_orgao_1), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_causa_1), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_orgao_2), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_causa_2), enconding))
-df <- df %>% mutate(diagnostico_presuntivo_motivo = stri_trans_general(tolower(diagnostico_presuntivo_motivo), enconding))
+df <- df %>% mutate(diagnostico_presuntivo_causa = stri_trans_general(tolower(diagnostico_presuntivo_causa), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_presuntivo_lesao_principal_orgao), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesao_principal_causa = stri_trans_general(tolower(diagnostico_presuntivo_lesao_principal_causa), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_orgao_1), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_causa_1), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_orgao_2), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_presuntivo_lesaes_secundarias_causa_2), encoding))
+df <- df %>% mutate(diagnostico_presuntivo_motivo = stri_trans_general(tolower(diagnostico_presuntivo_motivo), encoding))
 
 # diagnostico_primario
-df <- df %>% mutate(diagnostico_primario_causa = stri_trans_general(tolower(diagnostico_primario_causa), enconding))
-df <- df %>% mutate(diagnostico_primario_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_primario_lesao_principal_orgao), enconding))
-df <- df %>% mutate(diagnostico_primario_lesao_principal_causa = stri_trans_general(tolower(diagnostico_primario_lesao_principal_causa), enconding))
-df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_orgao_1), enconding))
-df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_causa_1), enconding))
-df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_orgao_2), enconding))
-df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_causa_2), enconding))
-df <- df %>% mutate(diagnostico_primario_motivo = stri_trans_general(tolower(diagnostico_primario_motivo), enconding))
+df <- df %>% mutate(diagnostico_primario_causa = stri_trans_general(tolower(diagnostico_primario_causa), encoding))
+df <- df %>% mutate(diagnostico_primario_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_primario_lesao_principal_orgao), encoding))
+df <- df %>% mutate(diagnostico_primario_lesao_principal_causa = stri_trans_general(tolower(diagnostico_primario_lesao_principal_causa), encoding))
+df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_orgao_1), encoding))
+df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_causa_1), encoding))
+df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_orgao_2), encoding))
+df <- df %>% mutate(diagnostico_primario_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_primario_lesaes_secundarias_causa_2), encoding))
+df <- df %>% mutate(diagnostico_primario_motivo = stri_trans_general(tolower(diagnostico_primario_motivo), encoding))
 
 # diagnostico_contributivo
-df <- df %>% mutate(diagnostico_contributivo_causa = stri_trans_general(tolower(diagnostico_contributivo_causa), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_contributivo_lesao_principal_orgao), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesao_principal_causa = stri_trans_general(tolower(diagnostico_contributivo_lesao_principal_causa), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_orgao_1), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_causa_1), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_orgao_2), enconding))
-df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_causa_2), enconding))
-df <- df %>% mutate(diagnostico_contributivo_motivo = stri_trans_general(tolower(diagnostico_contributivo_motivo), enconding))
+df <- df %>% mutate(diagnostico_contributivo_causa = stri_trans_general(tolower(diagnostico_contributivo_causa), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesao_principal_orgao = stri_trans_general(tolower(diagnostico_contributivo_lesao_principal_orgao), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesao_principal_causa = stri_trans_general(tolower(diagnostico_contributivo_lesao_principal_causa), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_orgao_1 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_orgao_1), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_causa_1 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_causa_1), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_orgao_2 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_orgao_2), encoding))
+df <- df %>% mutate(diagnostico_contributivo_lesaes_secundarias_causa_2 = stri_trans_general(tolower(diagnostico_contributivo_lesaes_secundarias_causa_2), encoding))
+df <- df %>% mutate(diagnostico_contributivo_motivo = stri_trans_general(tolower(diagnostico_contributivo_motivo), encoding))
 
 # sistemas
-df <- df %>% mutate(cavidades_corporeas = stri_trans_general(tolower(cavidades_corporeas), enconding))
-df <- df %>% mutate(tecido_cutaneo_e_subcutaneo = stri_trans_general(tolower(tecido_cutaneo_e_subcutaneo), enconding))
-df <- df %>% mutate(sistema_musculo_esqueletico = stri_trans_general(tolower(sistema_musculo_esqueletico), enconding))
-df <- df %>% mutate(sistema_respiratorio = stri_trans_general(tolower(sistema_respiratorio), enconding))
-df <- df %>% mutate(sistema_cardiovascular = stri_trans_general(tolower(sistema_cardiovascular), enconding))
-df <- df %>% mutate(aparato_digestorio = stri_trans_general(tolower(aparato_digestorio), enconding))
-df <- df %>% mutate(sistema_urinario = stri_trans_general(tolower(sistema_urinario), enconding))
-df <- df %>% mutate(sistema_reprodutivo = stri_trans_general(tolower(sistema_reprodutivo), enconding))
-df <- df %>% mutate(sistema_linfo_hematopoietico = stri_trans_general(tolower(sistema_linfo_hematopoietico), enconding))
-df <- df %>% mutate(sistema_endocrino = stri_trans_general(tolower(sistema_endocrino), enconding))
-df <- df %>% mutate(orgaos_dos_sentidos = stri_trans_general(tolower(orgaos_dos_sentidos), enconding))
-df <- df %>% mutate(sistema_nervoso_central = stri_trans_general(tolower(sistema_nervoso_central), enconding))
+df <- df %>% mutate(cavidades_corporeas = stri_trans_general(tolower(cavidades_corporeas), encoding))
+df <- df %>% mutate(tecido_cutaneo_e_subcutaneo = stri_trans_general(tolower(tecido_cutaneo_e_subcutaneo), encoding))
+df <- df %>% mutate(sistema_musculo_esqueletico = stri_trans_general(tolower(sistema_musculo_esqueletico), encoding))
+df <- df %>% mutate(sistema_respiratorio = stri_trans_general(tolower(sistema_respiratorio), encoding))
+df <- df %>% mutate(sistema_cardiovascular = stri_trans_general(tolower(sistema_cardiovascular), encoding))
+df <- df %>% mutate(aparato_digestorio = stri_trans_general(tolower(aparato_digestorio), encoding))
+df <- df %>% mutate(sistema_urinario = stri_trans_general(tolower(sistema_urinario), encoding))
+df <- df %>% mutate(sistema_reprodutivo = stri_trans_general(tolower(sistema_reprodutivo), encoding))
+df <- df %>% mutate(sistema_linfo_hematopoietico = stri_trans_general(tolower(sistema_linfo_hematopoietico), encoding))
+df <- df %>% mutate(sistema_endocrino = stri_trans_general(tolower(sistema_endocrino), encoding))
+df <- df %>% mutate(orgaos_dos_sentidos = stri_trans_general(tolower(orgaos_dos_sentidos), encoding))
+df <- df %>% mutate(sistema_nervoso_central = stri_trans_general(tolower(sistema_nervoso_central), encoding))
 
 # Informações da necropsia
-df <- df %>% mutate(necropsia_sexo = stri_trans_general(tolower(necropsia_sexo), enconding))
-df <- df %>% mutate(necropsia_estagio_de_desenvolvimento = stri_trans_general(tolower(necropsia_estagio_de_desenvolvimento), enconding))
-df <- df %>% mutate(necropsia_classe_do_individuo = stri_trans_general(tolower(necropsia_classe_do_individuo), enconding))
-df <- df %>% mutate(necropsia_especie_do_individuo = stri_trans_general(tolower(necropsia_especie_do_individuo), enconding))
+df <- df %>% mutate(necropsia_sexo = stri_trans_general(tolower(necropsia_sexo), encoding))
+df <- df %>% mutate(necropsia_estagio_de_desenvolvimento = stri_trans_general(tolower(necropsia_estagio_de_desenvolvimento), encoding))
+df <- df %>% mutate(necropsia_classe_do_individuo = stri_trans_general(tolower(necropsia_classe_do_individuo), encoding))
+df <- df %>% mutate(necropsia_especie_do_individuo = stri_trans_general(tolower(necropsia_especie_do_individuo), encoding))
 
 # Separando interacoes_antropicas em interacao_tipo e interacao_nivel
 df <- extract(df, interacoes_antropicas, into = c('interacao_tipo', 'interacao_remover'), regex = regexTipo, remove = FALSE)
@@ -275,3 +273,10 @@ df_testing <- select(df_testing, model_columns)
 
 # create_report(df_training, output_file = 'training_report.html')
 # create_report(df_testing, output_file = 'testing_report.html')
+
+# Removendo variáveis para liberar memória
+rm(
+  df, unnecessary_columns, model_columns, stopWords, regexStatus, 
+  regexMotivo, regexTipo, regexNivel, regexPontuacao, regexEspacosExtras,
+  encoding
+)
