@@ -5,7 +5,8 @@
 #     'plyr',
 #     'caret',
 #     'tm',
-#     'DataExplorer'
+#     'DataExplorer',
+#     'corrplot'
 #   ),
 #   dependencies = TRUE
 # )
@@ -17,6 +18,7 @@ library(stringi)
 library(stringr)
 library(tm)
 library(DataExplorer)
+library(corrplot)
 
 # Carregando dataframe a partir do arquivo CSV
 df <- read.csv(file = 'data/pmp-necropsia.csv', header = TRUE, sep = ';', dec = ',')

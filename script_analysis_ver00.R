@@ -11,6 +11,21 @@ df_correlation[correlation_columns] <- lapply(df_correlation[correlation_columns
 
 correlation <- round(cor(df_correlation), 2)
 
+correlation_columns_min = c(
+  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos', 
+  'diagnostico_presuntivo_causa', 'diagnostico_presuntivo_lesao_principal_causa',
+  'diagnostico_primario_causa', 'diagnostico_primario_lesao_principal_causa',
+  'diagnostico_contributivo_causa', 'diagnostico_contributivo_lesao_principal_causa'
+)
+
+df_correlation_min <- select(df_training, correlation_columns_min)
+df_correlation_min[correlation_columns_min] <- lapply(df_correlation_min[correlation_columns_min], as.numeric)
+
+correlation_min <- round(cor(df_correlation_min), 2)
+
+corrplot(correlation, method = 'circle')
+corrplot(correlation_min, method = 'circle')
+
 interacao_cc <- df_training %>% group_by(interacao_tipo, cc_status) %>% summarise(total = n())
 interacao_tcs <- df_training %>% group_by(interacao_tipo, tcs_status) %>% summarise(total = n())
 interacao_sme <- df_training %>% group_by(interacao_tipo, sme_status) %>% summarise(total = n())
@@ -92,5 +107,5 @@ interacao_d_contributivo <- df_training %>%
 
 # Removendo variáveis para liberar memória
 rm(
-  correlation_columns
+  correlation_columns, correlation_columns_min
 )
