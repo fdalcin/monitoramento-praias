@@ -1,5 +1,7 @@
+library(ggcorrplot)
+
 correlation_columns = c(
-  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos', 
+  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos',
   'diagnostico_presuntivo_causa', 'diagnostico_presuntivo_lesao_principal_orgao', 'diagnostico_presuntivo_lesao_principal_causa', 'diagnostico_presuntivo_lesaes_secundarias_orgao_1', 'diagnostico_presuntivo_lesaes_secundarias_causa_1', 'diagnostico_presuntivo_lesaes_secundarias_orgao_2', 'diagnostico_presuntivo_lesaes_secundarias_causa_2', 'diagnostico_presuntivo_motivo',
   'diagnostico_primario_causa', 'diagnostico_primario_lesao_principal_orgao', 'diagnostico_primario_lesao_principal_causa', 'diagnostico_primario_lesaes_secundarias_orgao_1', 'diagnostico_primario_lesaes_secundarias_causa_1', 'diagnostico_primario_lesaes_secundarias_orgao_2', 'diagnostico_primario_lesaes_secundarias_causa_2', 'diagnostico_primario_motivo',
   'diagnostico_contributivo_causa', 'diagnostico_contributivo_lesao_principal_orgao', 'diagnostico_contributivo_lesao_principal_causa', 'diagnostico_contributivo_lesaes_secundarias_orgao_1', 'diagnostico_contributivo_lesaes_secundarias_causa_1', 'diagnostico_contributivo_lesaes_secundarias_orgao_2', 'diagnostico_contributivo_lesaes_secundarias_causa_2', 'diagnostico_contributivo_motivo',
@@ -7,12 +9,32 @@ correlation_columns = c(
 )
 
 df_correlation <- select(df_training, correlation_columns)
-df_correlation[correlation_columns] <- lapply(df_correlation[correlation_columns], as.numeric)
+## df_correlation[correlation_columns] <-
+## lapply(df_correlation[correlation_columns],
+## as.numeric)
 
-correlation <- round(cor(df_correlation), 2)
+x <- df_correlation
+
+for(i in correlation_columns) {
+    x[, i] <- ifelse(x[, i] == "", NA, x[, i])
+    ## x[, i] <- ifelse(is.na(x[, i]), 9999, x[, i])
+}
+
+correlation <- round(cor(x), 3)
+ggcorrplot(correlation)
+plot_missing(x)
+
+x <- x[, c(30:41, 15, 6:8, 4, 3, 2, 1, 14)]
+y <- x[complete.cases(x),]
+
+correlation <- round(cor(y), 3)
+ggcorrplot(correlation)
+plot_missing(x)
+
+
 
 correlation_columns_min = c(
-  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos', 
+  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos',
   'diagnostico_presuntivo_causa', 'diagnostico_presuntivo_lesao_principal_causa',
   'diagnostico_primario_causa', 'diagnostico_primario_lesao_principal_causa',
   'diagnostico_contributivo_causa', 'diagnostico_contributivo_lesao_principal_causa'
