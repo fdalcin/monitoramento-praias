@@ -1,133 +1,159 @@
+# Carregando pacotes
+library(tidyverse)
+library(DataExplorer)
 library(ggcorrplot)
 
+# Carregando dados limpos
+df <-
+  read.csv(
+    file = 'data/pmp-necropsia-analise.csv',
+    header = TRUE,
+    sep = ',',
+  )
+
 correlation_columns = c(
-  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos',
-  'diagnostico_presuntivo_causa', 'diagnostico_presuntivo_lesao_principal_orgao', 'diagnostico_presuntivo_lesao_principal_causa', 'diagnostico_presuntivo_lesaes_secundarias_orgao_1', 'diagnostico_presuntivo_lesaes_secundarias_causa_1', 'diagnostico_presuntivo_lesaes_secundarias_orgao_2', 'diagnostico_presuntivo_lesaes_secundarias_causa_2', 'diagnostico_presuntivo_motivo',
-  'diagnostico_primario_causa', 'diagnostico_primario_lesao_principal_orgao', 'diagnostico_primario_lesao_principal_causa', 'diagnostico_primario_lesaes_secundarias_orgao_1', 'diagnostico_primario_lesaes_secundarias_causa_1', 'diagnostico_primario_lesaes_secundarias_orgao_2', 'diagnostico_primario_lesaes_secundarias_causa_2', 'diagnostico_primario_motivo',
-  'diagnostico_contributivo_causa', 'diagnostico_contributivo_lesao_principal_orgao', 'diagnostico_contributivo_lesao_principal_causa', 'diagnostico_contributivo_lesaes_secundarias_orgao_1', 'diagnostico_contributivo_lesaes_secundarias_causa_1', 'diagnostico_contributivo_lesaes_secundarias_orgao_2', 'diagnostico_contributivo_lesaes_secundarias_causa_2', 'diagnostico_contributivo_motivo',
-  'cc_status', 'tcs_status', 'sme_status', 'sres_status', 'sc_status', 'ad_status', 'su_status', 'srep_status', 'slh_status', 'se_status', 'os_status', 'snc_status'
+  'condicao_da_carcaca',
+  'necropsia_imediata',
+  'escore_corporal',
+  'interacao_tipo',
+  'presenca_de_residuos_solidos',
+  'diagnostico_presuntivo_causa',
+  'diagnostico_presuntivo_lesao_principal_orgao',
+  'diagnostico_presuntivo_lesao_principal_causa',
+  'diagnostico_presuntivo_lesaes_secundarias_orgao_1',
+  'diagnostico_presuntivo_lesaes_secundarias_causa_1',
+  'diagnostico_presuntivo_lesaes_secundarias_orgao_2',
+  'diagnostico_presuntivo_lesaes_secundarias_causa_2',
+  'diagnostico_presuntivo_motivo',
+  'diagnostico_primario_causa',
+  'diagnostico_primario_lesao_principal_orgao',
+  'diagnostico_primario_lesao_principal_causa',
+  'diagnostico_primario_lesaes_secundarias_orgao_1',
+  'diagnostico_primario_lesaes_secundarias_causa_1',
+  'diagnostico_primario_lesaes_secundarias_orgao_2',
+  'diagnostico_primario_lesaes_secundarias_causa_2',
+  'diagnostico_primario_motivo',
+  'diagnostico_contributivo_causa',
+  'diagnostico_contributivo_lesao_principal_orgao',
+  'diagnostico_contributivo_lesao_principal_causa',
+  'diagnostico_contributivo_lesaes_secundarias_orgao_1',
+  'diagnostico_contributivo_lesaes_secundarias_causa_1',
+  'diagnostico_contributivo_lesaes_secundarias_orgao_2',
+  'diagnostico_contributivo_lesaes_secundarias_causa_2',
+  'diagnostico_contributivo_motivo',
+  'cc_status',
+  'tcs_status',
+  'sme_status',
+  'sres_status',
+  'sc_status',
+  'ad_status',
+  'su_status',
+  'srep_status',
+  'slh_status',
+  'se_status',
+  'os_status',
+  'snc_status'
 )
 
-df_correlation <- select(df_training, correlation_columns)
-## df_correlation[correlation_columns] <-
-## lapply(df_correlation[correlation_columns],
-## as.numeric)
+# Calculando correlação dos resultados
+corr_full <- select(df, correlation_columns)
 
-x <- df_correlation
-
+# Preenche colunas com '' para NA
 for(i in correlation_columns) {
-    x[, i] <- ifelse(x[, i] == "", NA, x[, i])
-    ## x[, i] <- ifelse(is.na(x[, i]), 9999, x[, i])
+  corr_full[, i] <- ifelse(
+    corr_full[, i] == '', NA, corr_full[, i])
 }
 
-correlation <- round(cor(x), 3)
+# Correlação das colunas para o modelo
+correlation <- round(cor(corr_full), 3)
+
 ggcorrplot(correlation)
-plot_missing(x)
+plot_missing(corr_full)
 
-x <- x[, c(30:41, 15, 6:8, 4, 3, 2, 1, 14)]
-y <- x[complete.cases(x),]
+# Selecionando apenas colunas com no máximo 40% de dados faltantes
+corr_full <- corr_full[, c(1:4, 6:8, 14:15, 30:41)]
 
-correlation <- round(cor(y), 3)
+# Selecionando somente registros com dados completos
+corr_complete <- corr_full[complete.cases(corr_full),]
+
+correlation <- round(cor(corr_complete), 3)
+
 ggcorrplot(correlation)
-plot_missing(x)
+plot_missing(corr_full)
 
+df_training <- corr_complete
 
-
-correlation_columns_min = c(
-  'condicao_da_carcaca', 'necropsia_imediata', 'escore_corporal', 'interacao_tipo', 'presenca_de_residuos_solidos',
-  'diagnostico_presuntivo_causa', 'diagnostico_presuntivo_lesao_principal_causa',
-  'diagnostico_primario_causa', 'diagnostico_primario_lesao_principal_causa',
-  'diagnostico_contributivo_causa', 'diagnostico_contributivo_lesao_principal_causa'
-)
-
-df_correlation_min <- select(df_training, correlation_columns_min)
-df_correlation_min[correlation_columns_min] <- lapply(df_correlation_min[correlation_columns_min], as.numeric)
-
-correlation_min <- round(cor(df_correlation_min), 2)
-
-corrplot(correlation, method = 'circle')
-corrplot(correlation_min, method = 'circle')
-
-interacao_cc <- df_training %>% group_by(interacao_tipo, cc_status) %>% summarise(total = n())
-interacao_tcs <- df_training %>% group_by(interacao_tipo, tcs_status) %>% summarise(total = n())
-interacao_sme <- df_training %>% group_by(interacao_tipo, sme_status) %>% summarise(total = n())
-interacao_sres <- df_training %>% group_by(interacao_tipo, sres_status) %>% summarise(total = n())
-interacao_sc <- df_training %>% group_by(interacao_tipo, sc_status) %>% summarise(total = n())
-interacao_ad <- df_training %>% group_by(interacao_tipo, ad_status) %>% summarise(total = n())
-interacao_su <- df_training %>% group_by(interacao_tipo, su_status) %>% summarise(total = n())
-interacao_srep <- df_training %>% group_by(interacao_tipo, srep_status) %>% summarise(total = n())
-interacao_slh <- df_training %>% group_by(interacao_tipo, slh_status) %>% summarise(total = n())
-interacao_se <- df_training %>% group_by(interacao_tipo, se_status) %>% summarise(total = n())
-interacao_os <- df_training %>% group_by(interacao_tipo, os_status) %>% summarise(total = n())
-interacao_snc <- df_training %>% group_by(interacao_tipo, snc_status) %>% summarise(total = n())
-
-residuos_primario_causa <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_primario_causa) %>%
+interacao_cc <- df_training %>% 
+  group_by(interacao_tipo, cc_status) %>% 
   summarise(total = n())
 
-residuos_presuntivo_causa <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_presuntivo_causa) %>%
+interacao_tcs <- df_training %>%
+  group_by(interacao_tipo, tcs_status) %>% 
   summarise(total = n())
 
-residuos_contributivo_causa <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_contributivo_causa) %>%
+interacao_sme <- df_training %>%
+  group_by(interacao_tipo, sme_status) %>%
   summarise(total = n())
 
-residuos_primario_orgao <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_primario_lesao_principal_causa, diagnostico_primario_lesao_principal_orgao) %>%
+interacao_sres <- df_training %>%
+  group_by(interacao_tipo, sres_status) %>%
   summarise(total = n())
 
-residuos_presuntivo_orgao <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_presuntivo_lesao_principal_causa, diagnostico_presuntivo_lesao_principal_orgao) %>%
+interacao_sc <- df_training %>%
+  group_by(interacao_tipo, sc_status) %>%
   summarise(total = n())
 
-residuos_contributivo_orgao <- df_training %>%
-  group_by(presenca_de_residuos_solidos, diagnostico_contributivo_lesao_principal_causa, diagnostico_contributivo_lesao_principal_orgao) %>%
+interacao_ad <- df_training %>%
+  group_by(interacao_tipo, ad_status) %>%
+  summarise(total = n())
+
+interacao_su <- df_training %>%
+  group_by(interacao_tipo, su_status) %>%
+  summarise(total = n())
+
+interacao_srep <- df_training %>%
+  group_by(interacao_tipo, srep_status) %>%
+  summarise(total = n())
+
+interacao_slh <- df_training %>%
+  group_by(interacao_tipo, slh_status) %>%
+  summarise(total = n())
+
+interacao_se <- df_training %>%
+  group_by(interacao_tipo, se_status) %>%
+  summarise(total = n())
+
+interacao_os <- df_training %>%
+  group_by(interacao_tipo, os_status) %>%
+  summarise(total = n())
+
+interacao_snc <- df_training %>%
+  group_by(interacao_tipo, snc_status) %>%
   summarise(total = n())
 
 interacao_d_primario_causa <- df_training %>%
   group_by(interacao_tipo, diagnostico_primario_causa) %>%
-  summarise(total = n()) # %>%
-  # filter(diagnostico_primario_causa != 'indeterminada') %>%
-  # filter(diagnostico_primario_causa != '')
+  summarise(total = n())
 
 interacao_d_presuntivo_causa <- df_training %>%
   group_by(interacao_tipo, diagnostico_presuntivo_causa) %>%
-  summarise(total = n()) # %>%
-  # filter(diagnostico_presuntivo_causa != 'indeterminada') %>%
-  # filter(diagnostico_presuntivo_causa != '')
-
-interacao_d_contributivo_causa <- df_training %>%
-  group_by(interacao_tipo, diagnostico_contributivo_causa) %>%
-  summarise(total = n()) # %>%
-  # filter(diagnostico_contributivo_causa != 'indeterminada') %>%
-  # filter(diagnostico_contributivo_causa != '')
-
-interacao_d_primario_orgao <- df_training %>%
-  group_by(interacao_tipo, diagnostico_primario_lesao_principal_causa, diagnostico_primario_lesao_principal_orgao) %>%
   summarise(total = n())
 
 interacao_d_presuntivo_orgao <- df_training %>%
-  group_by(interacao_tipo, diagnostico_presuntivo_lesao_principal_causa, diagnostico_presuntivo_lesao_principal_orgao) %>%
-  summarise(total = n())
-
-interacao_d_contributivo_orgao <- df_training %>%
-  group_by(interacao_tipo, diagnostico_contributivo_lesao_principal_causa, diagnostico_contributivo_lesao_principal_orgao) %>%
-  summarise(total = n())
-
-interacao_d_primario <- df_training %>%
-  group_by(interacao_tipo, diagnostico_primario_causa, diagnostico_primario_lesao_principal_causa) %>%
+  group_by(
+    interacao_tipo,
+    diagnostico_presuntivo_lesao_principal_causa,
+    diagnostico_presuntivo_lesao_principal_orgao
+  ) %>%
   summarise(total = n())
 
 interacao_d_presuntivo <- df_training %>%
-  group_by(interacao_tipo, diagnostico_presuntivo_causa, diagnostico_presuntivo_lesao_principal_causa) %>%
-  summarise(total = n())
-
-interacao_d_contributivo <- df_training %>%
-  group_by(interacao_tipo, diagnostico_contributivo_causa, diagnostico_contributivo_lesao_principal_causa) %>%
+  group_by(
+    interacao_tipo,
+    diagnostico_presuntivo_causa,
+    diagnostico_presuntivo_lesao_principal_causa
+  ) %>%
   summarise(total = n())
 
 # Removendo variáveis para liberar memória
-rm(
-  correlation_columns, correlation_columns_min
-)
+rm(correlation_columns, i, corr_full, corr_complete, correlation, df)
