@@ -11,6 +11,7 @@ df <-
     sep = ',',
   )
 
+# Colunas para verificar a correlação
 correlation_columns = c(
   'condicao_da_carcaca',
   'necropsia_imediata',
@@ -67,93 +68,120 @@ for(i in correlation_columns) {
 # Correlação das colunas para o modelo
 correlation <- round(cor(corr_full), 3)
 
+# Imprime a correlação de todas as colunas selecionadas
 ggcorrplot(correlation)
 plot_missing(corr_full)
 
-# Selecionando apenas colunas com no máximo 40% de dados faltantes
+# Seleciona apenas colunas com no máximo 40% de dados faltantes
 corr_full <- corr_full[, c(1:4, 6:8, 14:15, 30:41)]
 
-# Selecionando somente registros com dados completos
+# Seleciona somente registros com dados completos
 corr_complete <- corr_full[complete.cases(corr_full),]
 
+# Correlação das colunas para o modelo
 correlation <- round(cor(corr_complete), 3)
 
+# Imprime a correlação das colunas com dados completos
 ggcorrplot(correlation)
 plot_missing(corr_full)
 
-df_training <- corr_complete
+# Cria um dataframe com a coluna de classificação e todas as colunas que serão utilizadas no modelo
+df_training <- data.frame(
+  select(df, 'interacao_tipo'), 
+  corr_full[, c(1:3, 5:21)]
+)
 
-interacao_cc <- df_training %>% 
-  group_by(interacao_tipo, cc_status) %>% 
-  summarise(total = n())
+# Filtra apenas os casos que não possuam dados faltantes
+df_training <- df_training[complete.cases(df_training),]
 
-interacao_tcs <- df_training %>%
-  group_by(interacao_tipo, tcs_status) %>% 
-  summarise(total = n())
-
-interacao_sme <- df_training %>%
-  group_by(interacao_tipo, sme_status) %>%
-  summarise(total = n())
-
-interacao_sres <- df_training %>%
-  group_by(interacao_tipo, sres_status) %>%
-  summarise(total = n())
-
-interacao_sc <- df_training %>%
-  group_by(interacao_tipo, sc_status) %>%
-  summarise(total = n())
-
-interacao_ad <- df_training %>%
-  group_by(interacao_tipo, ad_status) %>%
-  summarise(total = n())
-
-interacao_su <- df_training %>%
-  group_by(interacao_tipo, su_status) %>%
-  summarise(total = n())
-
-interacao_srep <- df_training %>%
-  group_by(interacao_tipo, srep_status) %>%
-  summarise(total = n())
-
-interacao_slh <- df_training %>%
-  group_by(interacao_tipo, slh_status) %>%
-  summarise(total = n())
-
-interacao_se <- df_training %>%
-  group_by(interacao_tipo, se_status) %>%
-  summarise(total = n())
-
-interacao_os <- df_training %>%
-  group_by(interacao_tipo, os_status) %>%
-  summarise(total = n())
-
-interacao_snc <- df_training %>%
-  group_by(interacao_tipo, snc_status) %>%
-  summarise(total = n())
-
-interacao_d_primario_causa <- df_training %>%
-  group_by(interacao_tipo, diagnostico_primario_causa) %>%
-  summarise(total = n())
-
-interacao_d_presuntivo_causa <- df_training %>%
-  group_by(interacao_tipo, diagnostico_presuntivo_causa) %>%
-  summarise(total = n())
-
-interacao_d_presuntivo_orgao <- df_training %>%
-  group_by(
-    interacao_tipo,
-    diagnostico_presuntivo_lesao_principal_causa,
-    diagnostico_presuntivo_lesao_principal_orgao
-  ) %>%
-  summarise(total = n())
-
-interacao_d_presuntivo <- df_training %>%
-  group_by(
-    interacao_tipo,
-    diagnostico_presuntivo_causa,
-    diagnostico_presuntivo_lesao_principal_causa
-  ) %>%
-  summarise(total = n())
+# Salva em um novo arquivo
+write.csv(
+  df_training, 
+  'data/pmp-necropsia-training-complete.csv', 
+  row.names = FALSE
+)
 
 # Removendo variáveis para liberar memória
-rm(correlation_columns, i, corr_full, corr_complete, correlation, df)
+rm(
+  df,
+  df_training,
+  correlation,
+  correlation_columns,
+  corr_complete,
+  corr_full,
+  i
+)
+# interacao_cc <- df_training %>% 
+#   group_by(interacao_tipo, cc_status) %>% 
+#   summarise(total = n())
+# 
+# interacao_tcs <- df_training %>%
+#   group_by(interacao_tipo, tcs_status) %>% 
+#   summarise(total = n())
+# 
+# interacao_sme <- df_training %>%
+#   group_by(interacao_tipo, sme_status) %>%
+#   summarise(total = n())
+# 
+# interacao_sres <- df_training %>%
+#   group_by(interacao_tipo, sres_status) %>%
+#   summarise(total = n())
+# 
+# interacao_sc <- df_training %>%
+#   group_by(interacao_tipo, sc_status) %>%
+#   summarise(total = n())
+# 
+# interacao_ad <- df_training %>%
+#   group_by(interacao_tipo, ad_status) %>%
+#   summarise(total = n())
+# 
+# interacao_su <- df_training %>%
+#   group_by(interacao_tipo, su_status) %>%
+#   summarise(total = n())
+# 
+# interacao_srep <- df_training %>%
+#   group_by(interacao_tipo, srep_status) %>%
+#   summarise(total = n())
+# 
+# interacao_slh <- df_training %>%
+#   group_by(interacao_tipo, slh_status) %>%
+#   summarise(total = n())
+# 
+# interacao_se <- df_training %>%
+#   group_by(interacao_tipo, se_status) %>%
+#   summarise(total = n())
+# 
+# interacao_os <- df_training %>%
+#   group_by(interacao_tipo, os_status) %>%
+#   summarise(total = n())
+# 
+# interacao_snc <- df_training %>%
+#   group_by(interacao_tipo, snc_status) %>%
+#   summarise(total = n())
+# 
+# interacao_d_primario_causa <- df_training %>%
+#   group_by(interacao_tipo, diagnostico_primario_causa) %>%
+#   summarise(total = n())
+# 
+# interacao_d_presuntivo_causa <- df_training %>%
+#   group_by(interacao_tipo, diagnostico_presuntivo_causa) %>%
+#   summarise(total = n())
+# 
+# interacao_d_presuntivo_orgao <- df_training %>%
+#   group_by(
+#     interacao_tipo,
+#     diagnostico_presuntivo_lesao_principal_causa,
+#     diagnostico_presuntivo_lesao_principal_orgao
+#   ) %>%
+#   summarise(total = n())
+# 
+# interacao_d_presuntivo <- df_training %>%
+#   group_by(
+#     interacao_tipo,
+#     diagnostico_presuntivo_causa,
+#     diagnostico_presuntivo_lesao_principal_causa
+#   ) %>%
+#   summarise(total = n())
+# 
+# # Removendo variáveis para liberar memória
+# rm(correlation_columns, i, corr_full, corr_complete, correlation, df)

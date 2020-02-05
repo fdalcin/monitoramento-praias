@@ -4,8 +4,6 @@ library(janitor)
 library(stringi)
 library(stringr)
 library(tm)
-# library(DataExplorer)
-# library(ggcorrplot)
 
 # Carregando dataframe a partir do arquivo CSV
 df <-
@@ -1009,8 +1007,16 @@ df_analysis <- select(df_analysis, model_columns)
 df_testing <- filter(df, quantidade_interacoes == 'none')
 df_testing <- select(df_testing, model_columns)
 
-write.csv(df_analysis, 'data/pmp-necropsia-analise.csv', row.names = FALSE)
-write.csv(df_testing, 'data/pmp-necropsia-teste.csv', row.names = FALSE)
+write.csv(
+  df_analysis, 
+  'data/pmp-necropsia-analise.csv', 
+  row.names = FALSE
+)
+write.csv(
+  df_testing, 
+  'data/pmp-necropsia-teste.csv', 
+  row.names = FALSE
+)
 
 # Removendo variáveis para liberar memória
 rm(
