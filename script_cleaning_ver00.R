@@ -62,6 +62,7 @@ unnecessary_columns = c(
   'pmp'
 )
 
+# Colunas a serem utilizadas no modelo
 model_columns = c(
   'codigo',
   'condicao_da_carcaca',
@@ -160,7 +161,7 @@ df <- df %>%
     interacoes_antropicas = stri_trans_general(tolower(interacoes_antropicas), encoding)
   )
 
-# diagnostico_contributivo
+# diagnostico_presuntivo
 df <- df %>% 
   mutate(
     diagnostico_presuntivo_causa = stri_trans_general(tolower(diagnostico_presuntivo_causa), encoding)
@@ -998,12 +999,14 @@ df$diagnostico_primario_lesao_principal_orgao <-
     df$diagnostico_primario_lesao_principal_orgao
   )
 
+# Converte colunas do modelo para factor
 df[model_columns] = lapply(df[model_columns], as.factor)
 
-# # Criando bases de análise/treino e teste de modelo
+# Criando base de análise, treino e validação de modelo
 df_analysis <- filter(df, quantidade_interacoes == 'one')
 df_analysis <- select(df_analysis, model_columns)
 
+# Criando base para aplicar o modelo final
 df_testing <- filter(df, quantidade_interacoes == 'none')
 df_testing <- select(df_testing, model_columns)
 
@@ -1012,6 +1015,7 @@ write.csv(
   'data/pmp-necropsia-analise.csv', 
   row.names = FALSE
 )
+
 write.csv(
   df_testing, 
   'data/pmp-necropsia-teste.csv', 

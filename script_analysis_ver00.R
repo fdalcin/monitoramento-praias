@@ -87,7 +87,7 @@ plot_missing(corr_full)
 
 # Cria um dataframe com a coluna de classificação e todas as colunas que serão utilizadas no modelo
 df_training <- data.frame(
-  select(df, 'interacao_tipo'), 
+  df[, c(1, 5, 44:47)], 
   corr_full[, c(1:3, 5:21)]
 )
 
