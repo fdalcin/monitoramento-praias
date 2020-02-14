@@ -1,21 +1,53 @@
-library(class)
-library(gmodels)
+# Carregando pacotes
 library(caret)
-library(C50)
+library(tidyverse)
 
-df_train <- df_n[train_indices, ]
-df_test <- df_n[-train_indices, ]
+# Carregando dados limpos
+training <-
+  read.csv(
+    file = 'data/pmp-necropsia-training.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-train_labels <- df[train_indices, 1]
-test_labels <- df[-train_indices, 1]
+testing <-
+  read.csv(
+    file = 'data/pmp-necropsia-testing.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-set.seed(300)
+control <- trainControl(
+  method = 'repeatedcv', 
+  number = 10, 
+  repeats = 10
+)
 
-dt <- C5.0(df_train, train_labels, trials = 30, control = C5.0Control(earlyStopping = FALSE))
+grid <- expand.grid(
+  winnow = c(TRUE, FALSE),
+  trials = c(2, 4, 8, 12, 14), # nº de iterações
+  model = c('tree', 'rules') # modelo
+)
 
-dt_pred <- predict(dt, df_test)
+dt_fit <- train(
+  interacao_tipo ~ ., 
+  training[-c(1, 3:6)], 
+  method = 'C5.0', 
+  metric = 'Accuracy',
+  importance = TRUE,
+  trControl = control, 
+  tuneGrid = grid
+)
 
-matriz <- table(dt_pred, test_labels)
-confusion_dt <- confusionMatrix(matriz)
+dt_importance <- varImp(dt_fit, scale = FALSE)
 
-rm(df_train, df_test, train_labels, test_labels, matriz)
+dt_pred <- predict(dt_fit, testing)
+dt_confusion <- confusionMatrix(dt_pred, testing$interacao_tipo)
+
+plot(dt_importance) # verificar melhor forma de imprimir o gráfico
+plot(dt_fit) # verificar melhor forma de imprimir o gráfico
+
+# Salva o modelo obtido
+saveRDS(dt_fit, 'models/decision_tree.rds')
+
+rm(control, grid, training, testing)
