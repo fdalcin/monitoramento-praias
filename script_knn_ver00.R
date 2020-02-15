@@ -1,39 +1,47 @@
-library(class)
-library(gmodels)
+# Carregando pacotes
 library(caret)
+library(tidyverse)
 
-df_train <- df_n[train_indices, ]
-df_test <- df_n[-train_indices, ]
+# Carregando dados limpos
+training <-
+  read.csv(
+    file = 'data/pmp-necropsia-training.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-train_labels <- df[train_indices, 1]
-test_labels <- df[-train_indices, 1]
+testing <-
+  read.csv(
+    file = 'data/pmp-necropsia-testing.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-set.seed(300)
+control <- trainControl(
+  method = 'repeatedcv', 
+  number = 10, 
+  repeats = 10
+)
 
-# Calular o número de vizinhos para o modelo
-knn_amount = floor(sqrt(sample_size))
-knn_amount1 = knn_amount + 1
+knn_fit <- train(
+  interacao_tipo ~ ., 
+  training[-c(1, 3:6)], 
+  method = 'knn', 
+  metric = 'Accuracy',
+  trControl = control, 
+  preProc = c("center", "scale"),
+  tuneLength = 20
+)
 
-# Executa o modelo de KNN
-knn1 <- knn(train = df_train, test = df_test, cl = train_labels, k = knn_amount)
-knn2 <- knn(train = df_train, test = df_test, cl = train_labels, k = knn_amount1)
+knn_importance <- varImp(knn_fit, scale = FALSE)
 
-# Matriz de confusão
-matriz <- table(knn1, test_labels)
-confusion_knn1 <- confusionMatrix(matriz)
-accuracy(matriz)
+knn_pred <- predict(knn_fit, testing)
+knn_confusion <- confusionMatrix(knn_pred, testing$interacao_tipo)
 
-# Matriz de confusão
-matriz <- table(knn2, test_labels)
-confusion_knn2 <- confusionMatrix(matriz)
-accuracy(matriz)
+plot(knn_importance) # verificar melhor forma de imprimir o gráfico
+plot(knn_fit) # verificar melhor forma de imprimir o gráfico
 
-# k_optm = 1
-# for (knn_amount in 1:knn_amount1) {
-#   knn_mod <- knn(train = df_train, test = df_test, cl = train_labels, k = knn_amount)
-#   k_optm[knn_amount] <- accuracy(table(knn_mod, test_labels))
-# }
-# 
-# which.max(k_optm)
+# Salva o modelo obtido
+saveRDS(knn_fit, 'models/k_nearest_neighbors.rds')
 
-rm(knn_amount, knn_amount1, df_train, df_test, train_labels, test_labels, matriz)
+rm(control, training, testing)

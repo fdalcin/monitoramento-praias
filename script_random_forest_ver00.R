@@ -50,4 +50,4 @@ plot(rf_fit) # verificar melhor forma de imprimir o gráfico
 # Salva o modelo obtido
 saveRDS(rf_fit, 'models/random_forest.rds')
 
-rm(control, grid,training, testing)
+rm(control, grid, training, testing)
