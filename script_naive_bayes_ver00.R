@@ -1,21 +1,53 @@
-library(class)
-library(gmodels)
+# Carregando pacotes
 library(caret)
-library(e1071)
+library(tidyverse)
 
-df_train <- df_n[train_indices, ]
-df_test <- df_n[-train_indices, ]
+# Carregando dados limpos
+training <-
+  read.csv(
+    file = 'data/pmp-necropsia-training.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-train_labels <- df[train_indices, 1]
-test_labels <- df[-train_indices, 1]
+testing <-
+  read.csv(
+    file = 'data/pmp-necropsia-testing.csv',
+    header = TRUE,
+    sep = ',',
+  )
 
-set.seed(300)
+control <- trainControl(
+  method = 'repeatedcv', 
+  number = 10, 
+  repeats = 10
+)
 
-nb <- naiveBayes(df_train, train_labels)
+grid <- expand.grid(
+  usekernel = FALSE,
+  laplace = c(0:5),
+  adjust = c(0:5)
+)
 
-nb_pred <- predict(nb, df_test)
+nb_fit <- train(
+  interacao_tipo ~ ., 
+  training[-c(1, 3:6)], 
+  method = 'naive_bayes', 
+  metric = 'Accuracy',
+  importance = TRUE,
+  trControl = control, 
+  tuneGrid = grid
+)
 
-matriz <- table(nb_pred, test_labels)
-confusion_nb <- confusionMatrix(matriz)
+nb_importance <- varImp(nb_fit, scale = FALSE)
 
-rm(df_train, df_test, train_labels, test_labels, matriz)
+nb_pred <- predict(nb_fit, testing)
+nb_confusion <- confusionMatrix(nb_pred, testing$interacao_tipo)
+
+plot(nb_importance) # verificar melhor forma de imprimir o gráfico
+plot(nb_fit) # verificar melhor forma de imprimir o gráfico
+
+# Salva o modelo obtido
+saveRDS(nb_fit, 'models/naive_bayes.rds')
+
+rm(control, grid, training, testing)
