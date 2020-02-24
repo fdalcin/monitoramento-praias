@@ -992,11 +992,18 @@ df$diagnostico_primario_lesao_principal_orgao <-
     df$diagnostico_primario_lesao_principal_orgao
   )
 
-df$diagnostico_primario_lesao_principal_orgao <-
+df$diagnostico_primario_lesao_principal_causa <-
   ifelse(
-    df$diagnostico_primario_lesao_principal_orgao == '',
+    df$diagnostico_primario_lesao_principal_causa == '',
     'indeterminado',
-    df$diagnostico_primario_lesao_principal_orgao
+    df$diagnostico_primario_lesao_principal_causa
+  )
+
+df$presenca_de_residuos_solidos <-
+  ifelse(
+    df$presenca_de_residuos_solidos == '',
+    'indeterminado',
+    df$presenca_de_residuos_solidos
   )
 
 # Converte colunas do modelo para factor

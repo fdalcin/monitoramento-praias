@@ -29,7 +29,7 @@ df <-
   )
 
 # Normaliza os dados das colunas com a tabela Z
-df[,7:26] <- as.data.frame(scale(df[-c(1:6)]))
+df[,7:28] <- as.data.frame(scale(df[,7:28]))
 
 # Separa o os dados para treino e testes 
 # 70% para treino
@@ -48,7 +48,7 @@ df_test <- df[-train_index, ]
 # Verifica melhores variáveis
 control <- rfeControl(functions = rfFuncs, method = 'cv', number = 10)
 # Utiliza variáveis de 7:26 para verificar classificação da variável 2 com 2:20 variáveis
-feature_selecion <- rfe(df[,7:26], df[,2], sizes = c(1:20), rfeControl = control)
+feature_selecion <- rfe(df[,7:28], df[,2], sizes = c(1:22), rfeControl = control)
 
 print(feature_selecion)
 predictors(feature_selecion)

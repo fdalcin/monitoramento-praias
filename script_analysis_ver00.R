@@ -62,7 +62,8 @@ corr_full <- select(df, correlation_columns)
 # Preenche colunas com '' para NA
 for(i in correlation_columns) {
   corr_full[, i] <- ifelse(
-    corr_full[, i] == '', NA, corr_full[, i])
+    corr_full[, i] == '', NA, corr_full[, i]
+  )
 }
 
 # Correlação das colunas para o modelo
@@ -72,8 +73,8 @@ correlation <- round(cor(corr_full), 3)
 ggcorrplot(correlation)
 plot_missing(corr_full)
 
-# Seleciona apenas colunas com no máximo 40% de dados faltantes
-corr_full <- corr_full[, c(1:4, 6:8, 14:15, 30:41)]
+# Seleciona apenas colunas com no máximo 10% de dados faltantes
+corr_full <- corr_full[, c(1:8, 14:16, 30:41)]
 
 # Seleciona somente registros com dados completos
 corr_complete <- corr_full[complete.cases(corr_full),]
@@ -88,7 +89,7 @@ plot_missing(corr_full)
 # Cria um dataframe com a coluna de classificação e todas as colunas que serão utilizadas no modelo
 df_training <- data.frame(
   df[, c(1, 5, 44:47)], 
-  corr_full[, c(1:3, 5:21)]
+  corr_full[, c(1:3, 5:23)]
 )
 
 # Filtra apenas os casos que não possuam dados faltantes
