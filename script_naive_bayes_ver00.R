@@ -24,9 +24,9 @@ control <- trainControl(
 )
 
 grid <- expand.grid(
-  usekernel = FALSE,
-  laplace = c(0:5),
-  adjust = c(0:5)
+  usekernel = TRUE,
+  laplace = c(0:1),
+  adjust = c(0:1)
 )
 
 nb_fit <- train(
