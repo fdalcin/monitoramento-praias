@@ -25,7 +25,7 @@ control <- trainControl(
 
 grid <- expand.grid(
   winnow = c(TRUE, FALSE),
-  trials = c(2, 4, 8, 12, 14), # nº de iterações
+  trials = c(1:15), # nº de iterações
   model = c('tree', 'rules') # modelo
 )
 
