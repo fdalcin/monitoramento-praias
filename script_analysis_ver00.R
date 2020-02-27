@@ -70,7 +70,13 @@ for(i in correlation_columns) {
 correlation <- round(cor(corr_full), 3)
 
 # Imprime a correlação de todas as colunas selecionadas
-ggcorrplot(correlation)
+ggcorrplot(
+  correlation, 
+  outline.col = 'white',
+  colors = c('#c53030', '#e2e8f0', '#61045f'),
+  legend.title = 'Correlação'
+)
+
 plot_missing(corr_full)
 
 # Seleciona apenas colunas com no máximo 10% de dados faltantes
@@ -83,7 +89,16 @@ corr_complete <- corr_full[complete.cases(corr_full),]
 correlation <- round(cor(corr_complete), 3)
 
 # Imprime a correlação das colunas com dados completos
-ggcorrplot(correlation)
+ggcorrplot(
+  correlation, 
+  method = 'circle',
+  hc.order = TRUE, 
+  type = 'lower',
+  outline.col = 'white',
+  colors = c('#c53030', '#e2e8f0', '#61045f'),
+  legend.title = 'Correlação'
+)
+
 plot_missing(corr_full)
 
 # Cria um dataframe com a coluna de classificação e todas as colunas que serão utilizadas no modelo
