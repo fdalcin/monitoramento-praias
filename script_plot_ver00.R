@@ -22,8 +22,8 @@ ggplot(nb_fit) +
   labs(y = 'Acurácia (%)', 
        x = 'Ajuste do kernel (adjust)') +
   scale_y_continuous(labels = scales::percent_format(accuracy = 0.1), 
-                     limits = c(0.680, 0.692), 
-                     breaks = seq(0.680, 0.692, 0.002)) +
+                     limits = c(0.682, 0.691), 
+                     breaks = seq(0.682, 0.691, 0.002)) +
   scale_x_continuous(limits = c(0, 4), breaks = seq(0, 4, 1))
 
 ggplot(knn_fit) + 
@@ -33,8 +33,8 @@ ggplot(knn_fit) +
   labs(y = 'Acurácia (%)', 
        x = 'Nº de vizinhos (k)') +
   scale_y_continuous(labels = scales::percent_format(accuracy = 0.1), 
-                     limits = c(0.716, 0.746), 
-                     breaks = seq(0.716, 0.746, 0.002)) +
+                     limits = c(0.716, 0.744), 
+                     breaks = seq(0.716, 0.744, 0.002)) +
   scale_x_continuous(limits = c(3, 43), breaks = seq(3, 43, 2))
 
 ggplot(dt_fit) +
@@ -42,8 +42,8 @@ ggplot(dt_fit) +
   labs(y = 'Acurácia (%)',
        x = 'Árvores paralelas (trials)') +
   scale_y_continuous(labels = scales::percent_format(accuracy = 0.1),
-                     limits = c(0.768, 0.784),
-                     breaks = seq(0.768, 0.784, 0.002)) +
+                     limits = c(0.768, 0.783),
+                     breaks = seq(0.768, 0.783, 0.002)) +
   scale_x_continuous(limits = c(1, 15), breaks = seq(1, 15, 2))
 
 ggplot(rf_fit) + 
@@ -51,6 +51,6 @@ ggplot(rf_fit) +
   labs(y = 'Acurácia (%)', 
        x = 'Nº de variáveis selecionadas aleatoriamente') +
   scale_y_continuous(labels = scales::percent_format(accuracy = 0.1), 
-                     limits = c(0.770, 0.788), 
-                     breaks = seq(0.770, 0.789, 0.002)) +
+                     limits = c(0.771, 0.787), 
+                     breaks = seq(0.771, 0.787, 0.002)) +
   scale_x_continuous(limits = c(0, 22), breaks = seq(0, 22, 4))
