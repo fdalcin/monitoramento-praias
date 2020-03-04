@@ -6,7 +6,7 @@ library(ggcorrplot)
 # Carregando dados limpos
 df <-
   read.csv(
-    file = 'data/pmp-necropsia-analise.csv',
+    file = 'data/pmp-necropsia-full.csv',
     header = TRUE,
     sep = ',',
   )
@@ -99,7 +99,8 @@ ggcorrplot(
   legend.title = 'Correlação'
 )
 
-plot_missing(corr_full)
+missing <- filter(corr_full, !is.na(interacao_tipo))
+plot_missing(missing)
 
 # Cria um dataframe com a coluna de classificação e todas as colunas que serão utilizadas no modelo
 df_training <- data.frame(
@@ -107,13 +108,10 @@ df_training <- data.frame(
   corr_full[, c(1:3, 5:23)]
 )
 
-# Filtra apenas os casos que não possuam dados faltantes
-df_training <- df_training[complete.cases(df_training),]
-
 # Salva em um novo arquivo
 write.csv(
   df_training, 
-  'data/pmp-necropsia-training-complete.csv', 
+  'data/pmp-necropsia-analysis-full.csv', 
   row.names = FALSE
 )
 
@@ -125,6 +123,7 @@ rm(
   correlation_columns,
   corr_complete,
   corr_full,
+  missing,
   i
 )
 # interacao_cc <- df_training %>% 

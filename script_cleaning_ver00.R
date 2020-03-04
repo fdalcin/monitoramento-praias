@@ -1018,14 +1018,20 @@ df_testing <- filter(df, quantidade_interacoes == 'none')
 df_testing <- select(df_testing, model_columns)
 
 write.csv(
+  select(df, model_columns),
+  'data/pmp-necropsia-full.csv',
+  row.names = FALSE
+)
+
+write.csv(
   df_analysis, 
-  'data/pmp-necropsia-analise.csv', 
+  'data/pmp-necropsia-interacoes.csv', 
   row.names = FALSE
 )
 
 write.csv(
   df_testing, 
-  'data/pmp-necropsia-teste.csv', 
+  'data/pmp-necropsia-sem-interacoes.csv', 
   row.names = FALSE
 )
 
