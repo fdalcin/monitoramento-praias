@@ -23,13 +23,15 @@ control <- trainControl(
   repeats = 10
 )
 
-svm_fit <- train(
-  interacao_tipo ~ ., 
-  training[-c(1, 3:6)], 
-  method = 'svmPoly', 
-  metric = 'Accuracy',
-  trControl = control,
-  preProc = c("center", "scale")
+system.time(
+  svm_fit <- train(
+    interacao_tipo ~ ., 
+    training[-c(1, 3:6)], 
+    method = 'svmPoly', 
+    metric = 'Accuracy',
+    trControl = control,
+    preProc = c("center", "scale")
+  )
 )
 
 svm_importance <- varImp(svm_fit, scale = FALSE)
