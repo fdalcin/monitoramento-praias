@@ -23,14 +23,16 @@ control <- trainControl(
   repeats = 10
 )
 
-knn_fit <- train(
-  interacao_tipo ~ ., 
-  training[-c(1, 3:6)], 
-  method = 'knn', 
-  metric = 'Accuracy',
-  trControl = control, 
-  preProc = c("center", "scale"),
-  tuneLength = 20
+system.time(
+  knn_fit <- train(
+    interacao_tipo ~ ., 
+    training[-c(1, 3:6)], 
+    method = 'knn', 
+    metric = 'Accuracy',
+    trControl = control, 
+    preProc = c("center", "scale"),
+    tuneLength = 10
+  )
 )
 
 knn_importance <- varImp(knn_fit, scale = FALSE)

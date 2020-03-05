@@ -29,14 +29,16 @@ grid <- expand.grid(
   model = c('tree', 'rules') # modelo
 )
 
-dt_fit <- train(
-  interacao_tipo ~ ., 
-  training[-c(1, 3:6)], 
-  method = 'C5.0', 
-  metric = 'Accuracy',
-  importance = TRUE,
-  trControl = control, 
-  tuneGrid = grid
+system.time(
+  dt_fit <- train(
+    interacao_tipo ~ ., 
+    training[-c(1, 3:6)], 
+    method = 'C5.0', 
+    metric = 'Accuracy',
+    importance = TRUE,
+    trControl = control, 
+    tuneGrid = grid
+  )
 )
 
 dt_importance <- varImp(dt_fit, scale = FALSE)

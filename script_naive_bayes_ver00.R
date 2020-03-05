@@ -29,14 +29,16 @@ grid <- expand.grid(
   adjust = c(1:3)
 )
 
-nb_fit <- train(
-  interacao_tipo ~ ., 
-  training[-c(1, 3:6)], 
-  method = 'naive_bayes', 
-  metric = 'Accuracy',
-  importance = TRUE,
-  trControl = control, 
-  tuneGrid = grid
+system.time(
+  nb_fit <- train(
+    interacao_tipo ~ ., 
+    training[-c(1, 3:6)], 
+    method = 'naive_bayes', 
+    metric = 'Accuracy',
+    importance = TRUE,
+    trControl = control, 
+    tuneGrid = grid
+  )
 )
 
 nb_importance <- varImp(nb_fit, scale = FALSE)

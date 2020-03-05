@@ -24,19 +24,21 @@ control <- trainControl(
 )
 
 grid <- expand.grid(
-  mtry = c(2, 4, 8, 16, 20), # nº de variáveis selecionada aleatoriamente
+  mtry = c(2, 4, 8, 16, 20), # nº de variáveis selecionadas aleatoriamente
   splitrule = c('gini', 'extratrees'), # regra de split
   min.node.size = c(1, 3, 5) # tamanho mínimo de nós
 )
 
-rf_fit <- train(
-  interacao_tipo ~ ., 
-  training[-c(1, 3:6)], 
-  method = 'ranger', 
-  metric = 'Accuracy',
-  importance = 'impurity',
-  trControl = control, 
-  tuneGrid = grid
+system.time(
+  rf_fit <- train(
+    interacao_tipo ~ ., 
+    training[-c(1, 3:6)], 
+    method = 'ranger', 
+    metric = 'Accuracy',
+    importance = 'impurity',
+    trControl = control, 
+    tuneGrid = grid
+  )
 )
 
 rf_importance <- varImp(rf_fit, scale = FALSE)
